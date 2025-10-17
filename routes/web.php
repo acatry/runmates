@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventRegistrationController;
+
 
 
 Route::get('/', function () {
@@ -22,6 +24,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
     Route::get('/events', [EventController::class, 'index'])->name('events.index');
     Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+
+    Route::post('/events/{event}/register', [EventRegistrationController::class, 'store'])
+        ->name('events.register');
+    Route::delete('/events/{event}/register', [EventRegistrationController::class, 'destroy'])
+        ->name('events.unregister');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -25,4 +25,12 @@ class Event extends Model
     {
         return $this->belongsTo(User::class, 'organizer_id');
     }
+
+    public function registrations(){ return $this->hasMany(\App\Models\EventRegistration::class); }
+
+    public function attendees(){
+        // Liste des utilisateurs inscrits
+        return $this->belongsToMany(\App\Models\User::class, 'event_registrations')
+            ->withTimestamps();
+    }
 }

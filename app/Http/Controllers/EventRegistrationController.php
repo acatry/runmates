@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Event;
+use App\Models\EventRegistration;
+use Illuminate\Http\Request;
+
+class EventRegistrationController extends Controller
+{
+    public function store(Request $request, Event $event)
+    {
+        // (Plus tard: vérif deadline/capacité)
+        EventRegistration::firstOrCreate([
+            'user_id' => $request->user()->id,
+            'event_id' => $event->id,
+        ]);
+
+        return back()->with('success', 'Inscription confirmée !');
+    }
+
+    public function destroy(Request $request, Event $event)
+    {
+        EventRegistration::where('user_id', $request->user()->id)
+            ->where('event_id', $event->id)
+            ->delete();
+
+        return back()->with('success', 'Désinscription effectuée.');
+    }
+}
