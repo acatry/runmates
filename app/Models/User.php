@@ -51,4 +51,13 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function runningSessionsOrganized(){
+        return $this->hasMany(\App\Models\RunningSession::class, 'organizer_id');
+    }
+    public function runningSessionsJoined(){
+        return $this->belongsToMany(\App\Models\RunningSession::class, 'running_session_participations')
+            ->withTimestamps()
+            ->withPivot('status');
+    }
+
 }

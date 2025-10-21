@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class RunningSessionParticipation extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['user_id','running_session_id','status'];
+
+    public function user(){ return $this->belongsTo(User::class); }
+
+    public function runningSession(){ return $this->belongsTo(RunningSession::class); }
+}

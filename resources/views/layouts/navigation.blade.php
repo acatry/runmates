@@ -21,6 +21,12 @@
                         <x-nav-link :href="route('events.index')" :active="request()->routeIs('events.show')">
                         {{ __('Événements') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('running-sessions.index')" :active="request()->routeIs('running-sessions.show')">
+                       {{ __('Sessions d’entraînement') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('running-sessions.create')" :active="request()->routeIs('running-sessions.create')">
+                       {{ __('Publier une annonce') }}
+                    </x-nav-link>
                 </div>
             </div>
 
