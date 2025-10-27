@@ -42,8 +42,8 @@
                         <div class="bg-white p-4 rounded shadow">
                             <h3 class="font-bold text-lg">{{ $session->title }}</h3>
                             <p class="text-sm text-gray-600">
-                                📍 {{ $session->location }} ({{ $session->city ?? 'Ville inconnue' }})<br>
-                                📅 {{ $session->start_at->format('d/m/Y H:i') }}
+                                 {{ $session->location }} ({{ $session->city ?? 'Ville inconnue' }})<br>
+                                 {{ $session->start_at->format('d/m/Y H:i') }}
                             </p>
 
                             {{-- Détails supplémentaires --}}

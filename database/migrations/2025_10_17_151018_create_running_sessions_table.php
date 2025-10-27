@@ -18,6 +18,9 @@ return new class extends Migration {
             $table->string('zipcode', 12)->nullable();
             $table->dateTime('start_at')->index();
 
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+
             
             $table->decimal('distance_km_min', 5, 2)->nullable();
             $table->decimal('distance_km_max', 5, 2)->nullable();
@@ -27,8 +30,6 @@ return new class extends Migration {
             $table->unsignedInteger('duration_max')->nullable();
 
             $table->unsignedInteger('max_participants')->nullable();
-            $table->enum('visibility', ['public','private'])->default('public');
-            $table->enum('status', ['draft','published','cancelled'])->default('published');
 
             $table->timestamps();
 

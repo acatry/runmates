@@ -9,6 +9,7 @@
     <div class="py-8">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 bg-white p-6 rounded shadow">
 
+            {{-- Informations principales --}}
             <h3 class="text-2xl font-bold mb-2">{{ $session->title }}</h3>
             <p class="text-gray-600 mb-4">{{ $session->description }}</p>
 
@@ -17,9 +18,38 @@
                 <strong>Date :</strong> {{ $session->start_at->format('d/m/Y H:i') }}
             </p>
 
-            <p class="text-sm text-gray-700 mb-4">
-                Distance : {{ $session->distance_km_min ?? '?' }} - {{ $session->distance_km_max ?? '?' }} km<br>
-                Allure : {{ $session->pace_min_per_km_min ?? '?' }} - {{ $session->pace_min_per_km_max ?? '?' }} min/km
+            {{-- Carte Leaflet --}}
+            @if($session->latitude && $session->longitude)
+                {{-- Import du CSS Leaflet ici pour le style --}}
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+                <div id="map" style="height: 300px; border-radius: 8px; overflow: hidden;"></div>
+
+                {{-- Import du JS Leaflet tout en bas de la page --}}
+                <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Initialisation de la carte
+                        var map = L.map('map').setView([{{ $session->latitude }}, {{ $session->longitude }}], 14);
+
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; OpenStreetMap contributors'
+                        }).addTo(map);
+
+                        // Ajout du marqueur
+                        L.marker([{{ $session->latitude }}, {{ $session->longitude }}]).addTo(map);
+                    });
+                </script>
+            @else
+                <p class="text-sm text-gray-500 mt-2">
+                    Aucun point de rencontre défini sur la carte.
+                </p>
+            @endif
+
+            {{-- Infos complémentaires --}}
+            <p class="text-sm text-gray-700 mt-4 mb-4">
+                Distance : entre {{ $session->distance_km_min ?? '?' }} et {{ $session->distance_km_max ?? '?' }} km<br>
+                Allure : entre {{ $session->pace_min_per_km_min ?? '?' }} et {{ $session->pace_min_per_km_max ?? '?' }} min/km
             </p>
 
             {{-- Bouton pour rejoindre ou quitter --}}
@@ -55,7 +85,6 @@
                     <li>Aucun participant pour le moment.</li>
                 @endforelse
             </ul>
-
         </div>
     </div>
 </x-app-layout>

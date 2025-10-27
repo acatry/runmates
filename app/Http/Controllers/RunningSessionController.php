@@ -60,6 +60,8 @@ class RunningSessionController extends Controller
             'duration_min' => 'nullable|integer|min:5|max:1000',
             'duration_max' => 'nullable|integer|min:5|max:1000',
             'max_participants' => 'nullable|integer|min:1|max:500',
+            'latitude'  => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ]);
 
         $validatedData['organizer_id'] = auth()->id();
@@ -67,7 +69,7 @@ class RunningSessionController extends Controller
         RunningSession::create($validatedData);
 
         return redirect()->route('running-sessions.index')
-                         ->with('success', 'Session d’entraînement créée avec succès !');
+                         ->with('success', 'Session d’entraînement créée!');
     }
 
     public function show(RunningSession $runningSession)

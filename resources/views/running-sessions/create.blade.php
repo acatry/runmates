@@ -55,6 +55,17 @@
                            value="{{ old('start_at') }}" required>
                 </div>
 
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Choisissez le point de départ de l'entraînement</label>
+
+                    {{-- Pour stocker les coordonnées --}}
+                    <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude') }}">
+                    <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude') }}">
+
+                    <div id="map" style="height: 300px; border-radius: 8px; overflow: hidden;"></div>
+                </div>
+
+                
                 {{-- Distance et allure --}}
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
@@ -88,4 +99,30 @@
             </form>
         </div>
     </div>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        var map = L.map('map').setView([50.8503, 4.3517], 12); // Bxl
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var marker;
+
+        map.on('click', function(e) {
+            var lat = e.latlng.lat;
+            var lng = e.latlng.lng;
+
+            if (marker) {
+                map.removeLayer(marker);
+            }
+
+            marker = L.marker([lat, lng]).addTo(map);
+
+            document.getElementById('latitude').value = lat;
+            document.getElementById('longitude').value = lng;
+        });
+    </script>
 </x-app-layout>

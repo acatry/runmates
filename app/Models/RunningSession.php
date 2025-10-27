@@ -12,7 +12,8 @@ class RunningSession extends Model
     protected $fillable = [
         'organizer_id','title','description','location','city','zipcode','start_at',
         'distance_km_min','distance_km_max','pace_min_per_km_min','pace_min_per_km_max',
-        'duration_min','duration_max','max_participants','visibility','status',
+        'duration_min','duration_max','max_participants','visibility','status', 
+        'latitude','longitude',
     ];
 
     protected $casts = [
