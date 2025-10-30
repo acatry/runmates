@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
@@ -46,6 +46,30 @@
                 </div>
             @endif
         </div>
+
+        <div class="mt-4">
+            <label for="age" class="block text-sm font-medium text-gray-700">Âge</label>
+            <input id="age" name="age" type="number" value="{{ $user->age }}" class="mt-1 w-full border rounded px-3 py-2">
+        </div>
+
+        <div class="mt-4">
+            <label for="city" class="block text-sm font-medium text-gray-700">Ville</label>
+            <input id="city" name="city" type="text" value="{{ $user->city }}" class="mt-1 w-full border rounded px-3 py-2">
+        </div>
+
+        <div class="mt-4">
+            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+            <textarea id="description" name="description" rows="3" class="mt-1 w-full border rounded px-3 py-2">{{ $user->description }}</textarea>
+        </div>
+
+        <div class="mt-4">
+            <label for="profile_photo" class="block text-sm font-medium text-gray-700">Photo de profil</label>
+            <input id="profile_photo" name="profile_photo" type="file" accept="image/*" class="mt-1 w-full">
+            @if($user->profile_photo_path)
+                <img src="{{ asset('storage/' . $user->profile_photo_path) }}" alt="Photo de profil" class="mt-3 w-20 h-20 rounded-full object-cover">
+            @endif
+        </div>
+
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
