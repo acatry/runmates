@@ -27,6 +27,10 @@
                     <x-nav-link :href="route('running-sessions.create')" :active="request()->routeIs('running-sessions.create')">
                        {{ __('Publier une annonce') }}
                     </x-nav-link>
+                    <x-nav-link 
+                        :href="route('runner.profile', auth()->id())" :active="request()->routeIs('runner.profile')">
+                        {{ __('Mon profil') }}
+                    </x-nav-link>
                 </div>
             </div>
 

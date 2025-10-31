@@ -80,7 +80,11 @@
             <h4 class="font-semibold text-lg mb-2">Participants :</h4>
             <ul class="list-disc list-inside text-gray-700">
                 @forelse($session->attendees as $user)
-                    <li>{{ $user->name }}</li>
+                    <li>
+                        <a href="{{ route('runner.profile', $user->id) }}" class="text-blue-600 hover:underline">
+                            {{ $user->name }}
+                        </a>
+                    </li>
                 @empty
                     <li>Aucun participant pour le moment.</li>
                 @endforelse

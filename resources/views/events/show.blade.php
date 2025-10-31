@@ -65,8 +65,9 @@
                     <ul class="list-disc pl-6 space-y-1">
                         @foreach($attendees as $user)
                             <li>
-                                {{ $user->name }}
-                                <span class="text-gray-400 text-sm">({{ $user->email }})</span>
+                                <a href="{{ route('runner.profile', $user->id) }}" class="text-blue-600 hover:underline">
+                                    {{ $user->name }}
+                                </a>
                             </li>
                         @endforeach
                     </ul>

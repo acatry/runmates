@@ -7,6 +7,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventRegistrationController;
 use App\Http\Controllers\RunningSessionController;
 use App\Http\Controllers\RunningSessionParticipationController;
+use \App\Http\Controllers\PublicProfileController;
 
 
 
@@ -47,6 +48,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/runner/{user}', [PublicProfileController::class, 'show'])
+    ->name('runner.profile');
+
 });
 
 require __DIR__.'/auth.php';
