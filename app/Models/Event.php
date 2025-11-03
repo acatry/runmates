@@ -33,4 +33,9 @@ class Event extends Model
         return $this->belongsToMany(\App\Models\User::class, 'event_registrations')
             ->withTimestamps();
     }
+    
+    public function comments()
+    {
+        return $this->morphMany(\App\Models\Comment::class, 'commentable');
+    }
 }

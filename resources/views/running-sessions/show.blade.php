@@ -9,7 +9,7 @@
     <div class="py-8">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 bg-white p-6 rounded shadow">
 
-            {{-- Informations principales --}}
+            <!-- Détails de la session -->
             <h3 class="text-2xl font-bold mb-2">{{ $session->title }}</h3>
             <p class="text-gray-600 mb-4">{{ $session->description }}</p>
 
@@ -46,7 +46,6 @@
                 </p>
             @endif
 
-            {{-- Infos complémentaires --}}
             <p class="text-sm text-gray-700 mt-4 mb-4">
                 Distance : entre {{ $session->distance_km_min ?? '?' }} et {{ $session->distance_km_max ?? '?' }} km<br>
                 Allure : entre {{ $session->pace_min_per_km_min ?? '?' }} et {{ $session->pace_min_per_km_max ?? '?' }} min/km
@@ -54,41 +53,78 @@
 
             {{-- Bouton pour rejoindre ou quitter --}}
             @php
-                $isRegistered = auth()->check() && $session->attendees()->where('users.id', auth()->id())->exists();
+                $isRegistered = auth()->user()
+                    ? $session->attendees()->where('users.id', auth()->id())->exists()
+                    : false;
+                $attendeeCount = $session->attendees()->count();
             @endphp
 
-            <div class="mb-6">
-                @if($isRegistered)
-                    <form method="POST" action="{{ route('running-sessions.leave', $session) }}">
-                        @csrf
-                        @method('DELETE')
-                        <button class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">
-                            Se désinscrire
-                        </button>
-                    </form>
-                @else
-                    <form method="POST" action="{{ route('running-sessions.join', $session) }}">
-                        @csrf
-                        <button class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-500">
-                            S’inscrire à cette session
-                        </button>
-                    </form>
-                @endif
+            <div class="mb-6 flex items-center justify-between">
+                <div>
+                    @if($isRegistered)
+                        <form method="POST" action="{{ route('running-sessions.leave', $session) }}">
+                            @csrf @method('DELETE')
+                            <button class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">
+                                Se désinscrire
+                            </button>
+                        </form>
+                    @else
+                        <form method="POST" action="{{ route('running-sessions.join', $session) }}">
+                            @csrf
+                            <button class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-500">
+                                S’inscrire
+                            </button>
+                        </form>
+                    @endif
+                </div>
+                        <span class="text-sm text-gray-600">
+                    {{ $attendeeCount }} participant{{ $attendeeCount > 1 ? 's' : '' }}
+                </span>
             </div>
 
-            {{-- Liste des participants --}}
+            <!-- Liste des participants -->
             <h4 class="font-semibold text-lg mb-2">Participants :</h4>
-            <ul class="list-disc list-inside text-gray-700">
-                @forelse($session->attendees as $user)
-                    <li>
-                        <a href="{{ route('runner.profile', $user->id) }}" class="text-blue-600 hover:underline">
-                            {{ $user->name }}
-                        </a>
-                    </li>
-                @empty
-                    <li>Aucun participant pour le moment.</li>
-                @endforelse
-            </ul>
+            @php
+                $attendees = $session->attendees()->orderBy('name')->get();
+            @endphp
+
+            @if($attendees->isEmpty())
+                <p class="text-gray-500 text-sm">Aucun participant pour le moment.</p>
+            @else
+                <ul class="list-disc pl-6 space-y-1 text-gray-700">
+                    @foreach($attendees as $user)
+                        <li>
+                            <a href="{{ route('runner.profile', $user->id) }}" class="text-blue-600 hover:underline">
+                                {{ $user->name }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+            
+            <!-- Commentaires -->
+            <h4 class="font-semibold mb-2">Commentaires :</h4>
+            <div class="bg-white p-4 rounded shadow mt-6">
+                <!-- Liste des commentaires -->
+               @foreach($session->comments as $comment)
+                    <p class="mb-1">
+                        <strong>{{ $comment->user->name }}</strong>: {{ $comment->content }}
+                        <span class="text-xs text-gray-500">({{ $comment->created_at->format('d/m/Y H:i') }})</span>
+                    </p>
+                @endforeach
+            </div>
+
+            <form method="POST" action="{{ route('comments.store') }}" class="mt-3">
+                @csrf
+                <input type="hidden" name="commentable_id" value="{{ $session->id }}">
+                <input type="hidden" name="commentable_type" value="App\Models\RunningSession">
+
+                <textarea name="content" class="w-full border rounded p-2" rows="2" placeholder="Ecrivez votre commentaire"></textarea>
+
+                <button class="mt-2 px-3 py-1 bg-blue-600 text-white rounded">Publier</button>
+            </form>
+
+
         </div>
     </div>
 </x-app-layout>

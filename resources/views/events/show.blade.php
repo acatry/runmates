@@ -74,6 +74,28 @@
                 @endif
             </div>
 
+            <!-- Commentaires -->
+            <h4 class="font-semibold mb-2">Commentaires :</h4>
+            <div class="bg-white p-4 rounded shadow mt-6">
+                <!-- Liste des commentaires -->
+               @foreach($event->comments as $comment)
+                    <p class="mb-1">
+                        <strong>{{ $comment->user->name }}</strong>: {{ $comment->content }}
+                        <span class="text-xs text-gray-500">({{ $comment->created_at->format('d/m/Y H:i') }})</span>
+                    </p>
+                @endforeach
+            </div>
+            
+            <form method="POST" action="{{ route('comments.store') }}" class="mt-3">
+                @csrf
+                <input type="hidden" name="commentable_id" value="{{ $event->id }}">
+                <input type="hidden" name="commentable_type" value="App\Models\Event">
+            
+                <textarea name="content" class="w-full border rounded p-2" rows="2" placeholder="Ecrivez votre commentaire"></textarea>
+            
+                <button class="mt-2 px-3 py-1 bg-blue-600 text-white rounded">Publier</button>
+            </form>
+
             <!-- Retour -->
             <div class="flex justify-between">
                 <a href="{{ route('events.index') }}" class="px-3 py-2 bg-gray-100 rounded hover:bg-gray-200">

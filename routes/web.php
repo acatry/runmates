@@ -8,6 +8,8 @@ use App\Http\Controllers\EventRegistrationController;
 use App\Http\Controllers\RunningSessionController;
 use App\Http\Controllers\RunningSessionParticipationController;
 use \App\Http\Controllers\PublicProfileController;
+use \App\Http\Controllers\CommentController;
+
 
 
 
@@ -50,6 +52,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/runner/{user}', [PublicProfileController::class, 'show'])
     ->name('runner.profile');
+
+    //COMMENTS
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+
 
 });
 
