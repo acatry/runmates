@@ -40,7 +40,8 @@
                         @endphp
 
                         <div class="bg-white p-4 rounded shadow">
-                            <h3 class="font-bold text-lg">{{ $session->title }}</h3>
+                            <h3 class="font-bold text-lg">{{ $session->title }} par <a href="{{ route('runner.profile', $session->organizer->id) }}" class="text-blue-600 hover:underline">
+            {{ $session->organizer->name }}</a></h3>
                             <p class="text-sm text-gray-600">
                                  {{ $session->location }} ({{ $session->city ?? 'Ville inconnue' }})<br>
                                  {{ $session->start_at->format('d/m/Y H:i') }}

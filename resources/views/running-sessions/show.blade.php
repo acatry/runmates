@@ -10,7 +10,8 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 bg-white p-6 rounded shadow">
 
             <!-- Détails de la session -->
-            <h3 class="text-2xl font-bold mb-2">{{ $session->title }}</h3>
+            <h3 class="text-2xl font-bold mb-2">{{ $session->title }} par <a href="{{ route('runner.profile', $session->organizer->id) }}" class="text-blue-600 hover:underline">
+            {{ $session->organizer->name }}</a></h3>
             <p class="text-gray-600 mb-4">{{ $session->description }}</p>
 
             <p class="text-sm text-gray-700 mb-2">
