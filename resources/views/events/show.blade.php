@@ -45,16 +45,33 @@
                             </button>
                         </form>
                     @endif
+                    @if(auth()->id() === $event->organizer_id)
+                        <div class="flex gap-2">
+                        <a href="{{ route('events.edit', $event) }}"
+                           class="inline-block px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-300 text-sm">
+                            Modifier
+                        </a>
+                        <form method="POST" action="{{ route('events.delete', $event) }}"
+                              class="inline-block"
+                              onsubmit="return confirm('Supprimer cet évènement ?');">
+                            @csrf
+                            @method('DELETE')
+                           <button class="inline-block px-3 py-1 bg-red-600 text-white rounded hover:bg-red-300 text-sm">
+                                Supprimer
+                            </button>
+                        </form>
+                    </div>
+                    @endif
                 </div>
-
-                <span class="text-sm text-gray-600">
-                    {{ $attendeeCount }} inscrit{{ $attendeeCount > 1 ? 's' : '' }}
-                </span>
             </div>
 
             <!-- Liste des participants -->
             <div class="bg-white p-6 rounded shadow">
-                <h3 class="font-semibold mb-3">Participants</h3>
+                <h3 class="font-semibold mb-3">
+                    <span class="text-sm text-gray-600">
+                    {{ $attendeeCount }} inscrit{{ $attendeeCount > 1 ? 's' : '' }} :
+                    </span>
+                </h3>
                 @php
                     $attendees = $event->attendees()->orderBy('name')->get();
                 @endphp

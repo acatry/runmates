@@ -30,12 +30,54 @@ class EventController extends Controller
 
     public function index()
     {
-        $events = \App\Models\Event::orderBy('start_at')->paginate(10);
+        $events = Event::orderBy('start_at')->paginate(10);
         return view('events.index', compact('events'));
     }
 
-    public function show(\App\Models\Event $event)
+    public function show(Event $event)
     {
         return view('events.show', compact('event'));
     }
+
+    public function edit(Request $request, Event $event)
+    {
+        if ($request->user()->id !== $event->organizer_id) {
+            abort(403);
+        }
+
+        return view('events.edit', compact('event'));
+    }
+
+    public function update(Request $request, Event $event)
+    {
+        if ($request->user()->id !== $event->organizer_id) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'location' => 'required|string|max:255',
+            'start_at' => 'required|date',
+        ]);
+
+        $event->update($validated);
+
+        return redirect()
+            ->route('events.show', $event)
+            ->with('success', 'Événement mis à jour.');
+    }
+
+    public function delete(Request $request, Event $event)
+    {
+        if ($request->user()->id !== $event->organizer_id) {
+            abort(403);
+        }
+
+        $event->delete();
+
+        return redirect()->route('running-sessions.index')
+            ->with('success', 'L évènement a été supprimé avec succès.');
+    }
+
 }

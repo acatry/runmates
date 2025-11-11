@@ -69,10 +69,31 @@
                                     </form>
                                 @endif
 
-                                <span class="text-xs text-gray-500">
-                                    {{ $event->attendees()->count() }} inscrit(s)
-                                </span>
+                                @if(auth()->id() === $event->organizer_id)
+                                    <div class="flex gap-2">
+                                    <a href="{{ route('events.edit', $event) }}"
+                                       class="inline-block px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-300 text-sm">
+                                        Modifier
+                                    </a>
+                                    <form method="POST" action="{{ route('events.delete', $event) }}"
+                                          class="inline-block"
+                                          onsubmit="return confirm('Supprimer cet évènement ?');">
+                                        @csrf
+                                        @method('DELETE')
+                                       <button class="inline-block px-3 py-1 bg-red-600 text-white rounded hover:bg-red-300 text-sm">
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                    </div>
+                                @endif
                             </div>
+
+                                                            @php
+                                    $attendeeCount = $event->attendees()->count();
+                                @endphp
+                                <span class="text-xs text-gray-500">
+                                    {{ $attendeeCount }} inscrit{{ $attendeeCount > 1 ? 's' : '' }}
+                                </span>
 
                             {{-- Lien vers détails --}}
                             <a href="{{ route('events.show', $event) }}"

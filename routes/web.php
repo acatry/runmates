@@ -34,6 +34,13 @@ Route::middleware('auth')->group(function () {
         ->name('events.register');
     Route::delete('/events/{event}/register', [EventRegistrationController::class, 'destroy'])
         ->name('events.unregister');
+    //EDIT + DELETE
+    Route::get('/events/{event}/edit', [EventController::class, 'edit'])
+        ->name('events.edit');
+    Route::put('/events/{event}', [EventController::class, 'update'])
+        ->name('events.update');
+    Route::delete('/events/{event}', [EventController::class, 'delete'])
+    ->name('events.delete');
 
     //RUNNING SESSION
     Route::get('/running-sessions', [RunningSessionController::class, 'index'])->name('running-sessions.index');
