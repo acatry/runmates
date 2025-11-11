@@ -65,26 +65,40 @@
                     @if($isRegistered)
                         <form method="POST" action="{{ route('running-sessions.leave', $session) }}">
                             @csrf @method('DELETE')
-                            <button class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">
+                            <button class="px-3 py-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-300 text-sm">
                                 Se désinscrire
                             </button>
                         </form>
                     @else
                         <form method="POST" action="{{ route('running-sessions.join', $session) }}">
                             @csrf
-                            <button class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-500">
+                            <button class="px-3 py-1 bg-emerald-600 text-white rounded hover:bg-emerald-300 text-sm">
                                 S’inscrire
                             </button>
                         </form>
                     @endif
+                    @if(auth()->id() === $session->organizer_id)
+                        <a href="{{ route('running-sessions.edit', $session) }}"
+                           class="inline-block px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-300 text-sm">
+                            Modifier
+                        </a>
+
+                        <form method="POST" action="{{ route('running-sessions.delete', $session) }}"
+                              class="inline-block"
+                              onsubmit="return confirm('Supprimer cette session ?');">
+                            @csrf
+                            @method('DELETE')
+
+                           <button class="inline-block px-3 py-1 bg-red-600 text-white rounded hover:bg-red-300 text-sm">
+                                Supprimer
+                            </button>
+                        </form>
+                    @endif
                 </div>
-                        <span class="text-sm text-gray-600">
-                    {{ $attendeeCount }} participant{{ $attendeeCount > 1 ? 's' : '' }}
-                </span>
             </div>
 
             <!-- Liste des participants -->
-            <h4 class="font-semibold text-lg mb-2">Participants :</h4>
+            <h4 class="font-semibold text-lg mb-2"><span class="text-sm text-gray-600">{{ $attendeeCount }} participant{{ $attendeeCount > 1 ? 's' : '' }}</span> :</h4>
             @php
                 $attendees = $session->attendees()->orderBy('name')->get();
             @endphp

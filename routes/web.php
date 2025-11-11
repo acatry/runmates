@@ -44,6 +44,15 @@ Route::middleware('auth')->group(function () {
         ->name('running-sessions.join');
     Route::delete('/running-sessions/{runningSession}/join', [RunningSessionParticipationController::class, 'destroy'])
         ->name('running-sessions.leave');
+    //EDIT + DELETE
+    Route::get('/running-sessions/{runningSession}/edit', [RunningSessionController::class, 'edit'])
+        ->name('running-sessions.edit');
+    Route::put('/running-sessions/{runningSession}', [RunningSessionController::class, 'update'])
+        ->name('running-sessions.update');
+    Route::delete('/running-sessions/{runningSession}', [RunningSessionController::class, 'delete'])
+    ->name('running-sessions.delete');
+
+
 
 
     //PROFILE

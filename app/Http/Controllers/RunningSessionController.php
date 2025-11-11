@@ -78,4 +78,60 @@ class RunningSessionController extends Controller
             'session' => $runningSession
         ]);
     }
+
+
+    public function edit(Request $request, RunningSession $runningSession)
+    {
+        if ($request->user()->id !== $runningSession->organizer_id) {
+            abort(403);
+        }
+
+        return view('running-sessions.edit', ['session' => $runningSession]);
+    }
+
+    public function update(Request $request, RunningSession $runningSession)
+    {
+        if ($request->user()->id !== $runningSession->organizer_id) {
+            abort(403);
+        }
+
+        $data = $request->validate([
+            'title' => ['required','string','max:255'],
+            'description' => ['nullable','string'],
+            'location' => ['required','string','max:255'],
+            'city' => ['nullable','string','max:255'],
+            'zipcode' => ['nullable','string','max:12'],
+            'start_at' => ['required','date'],
+            'distance_km_min' => ['nullable','numeric'],
+            'distance_km_max' => ['nullable','numeric'],
+            'pace_min_per_km_min' => ['nullable','numeric'],
+            'pace_min_per_km_max' => ['nullable','numeric'],
+            'duration_min' => ['nullable','integer'],
+            'duration_max' => ['nullable','integer'],
+            'latitude' => ['nullable','numeric'],
+            'longitude' => ['nullable','numeric'],
+            'visibility' => ['nullable','in:public,private'],
+            'status' => ['nullable','in:draft,published,cancelled'],
+            'max_participants' => ['nullable','integer'],
+        ]);
+
+        $runningSession->update($data);
+
+        return redirect()->route('running-sessions.show', $runningSession)
+            ->with('success', 'La session a été mise à jour');
+    }
+
+    public function delete(Request $request, RunningSession $runningSession)
+    {
+        if ($request->user()->id !== $runningSession->organizer_id) {
+            abort(403);
+        }
+
+        $runningSession->delete();
+
+        return redirect()->route('running-sessions.index')
+            ->with('success', 'La session a été supprimée avec succès.');
+    }
+
+
 }

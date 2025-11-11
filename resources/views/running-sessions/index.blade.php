@@ -53,7 +53,7 @@
                                 Allure : {{ $session->pace_min_per_km_min ?? '?' }} - {{ $session->pace_min_per_km_max ?? '?' }} min/km
                             </p>
 
-                            {{-- Boutons d'inscription / désinscription --}}
+                            {{-- Boutons d'inscription / désinscription ET Modifier / supprimer--}}
                             <div class="mt-3 flex items-center gap-2">
                                 @if($isRegistered)
                                     <form method="POST" action="{{ route('running-sessions.leave', $session) }}">
@@ -66,16 +66,38 @@
                                 @else
                                     <form method="POST" action="{{ route('running-sessions.join', $session) }}">
                                         @csrf
-                                        <button class="px-3 py-1 bg-emerald-600 text-white rounded hover:bg-emerald-500 text-sm">
+                                        <button class="px-3 py-1 bg-emerald-600 text-white rounded hover:bg-emerald-300 text-sm">
                                             S’inscrire
                                         </button>
                                     </form>
                                 @endif
 
-                                <span class="text-xs text-gray-500">
-                                    {{ $session->attendees()->count() }} participant(s)
-                                </span>
+
+                                @if(auth()->id() === $session->organizer_id)
+                                    <a href="{{ route('running-sessions.edit', $session) }}"
+                                       class="inline-block px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-300 text-sm">
+                                        Modifier
+                                    </a>
+
+                                    <form method="POST" action="{{ route('running-sessions.delete', $session) }}"
+                                          class="inline-block"
+                                          onsubmit="return confirm('Supprimer cette session ?');">
+                                        @csrf
+                                        @method('DELETE')
+
+                                       <button class="inline-block px-3 py-1 bg-red-600 text-white rounded hover:bg-red-300 text-sm">
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                @endif
+
                             </div>
+                            @php
+                                $attendeeCount = $session->attendees()->count();
+                            @endphp
+                            <span class="text-xs text-gray-500">
+                                {{ $attendeeCount }} participant{{ $attendeeCount > 1 ? 's' : '' }}
+                            </span>
 
                             {{-- Lien vers la page de détails --}}
                             <a href="{{ route('running-sessions.show', $session) }}"
