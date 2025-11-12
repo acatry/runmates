@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('location');
-            $table->dateTime('start_at')->index(); 
+            $table->dateTime('start_at')->index();
+            $table->boolean('volunteers_needed')->default(false); 
             $table->timestamps();
         });
     }
