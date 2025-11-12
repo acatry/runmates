@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\RunningSession;
+use App\Models\Event;
 
 class User extends Authenticatable
 {
@@ -51,17 +53,24 @@ class User extends Authenticatable
     }
 
     public function attendingEvents(){
-        return $this->belongsToMany(\App\Models\Event::class, 'event_registrations')
+        return $this->belongsToMany(Event::class, 'event_registrations')
             ->withTimestamps();
     }
 
     public function runningSessionsOrganized(){
-        return $this->hasMany(\App\Models\RunningSession::class, 'organizer_id');
+        return $this->hasMany(RunningSession::class, 'organizer_id');
     }
     public function runningSessionsJoined(){
-        return $this->belongsToMany(\App\Models\RunningSession::class, 'running_session_participations')
+        return $this->belongsToMany(RunningSession::class, 'running_session_participations')
             ->withTimestamps()
             ->withPivot('status');
+    }
+
+    public function volunteeredEvents()
+    {
+        return $this->belongsToMany(Event::class, 'event_volunteers')
+            ->withTimestamps()
+            ->withPivot('volunteer_role_id');
     }
 
 }
