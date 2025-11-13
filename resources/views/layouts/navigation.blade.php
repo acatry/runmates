@@ -15,17 +15,23 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Accueil') }}
                     </x-nav-link>
+                        @if (auth()->user()->isOrganizer())
                         <x-nav-link :href="route('events.create')" :active="request()->routeIs('events.create')">
                         {{ __('Créer un événement') }}
+                        @endif
                     </x-nav-link>
                         <x-nav-link :href="route('events.index')" :active="request()->routeIs('events.show')">
                         {{ __('Événements') }}
                     </x-nav-link>
+                        @if (auth()->user()->isSporty())
                     <x-nav-link :href="route('running-sessions.index')" :active="request()->routeIs('running-sessions.show')">
                        {{ __('Sessions d’entraînement') }}
+                       @endif
                     </x-nav-link>
+                        @if (auth()->user()->isSporty())
                     <x-nav-link :href="route('running-sessions.create')" :active="request()->routeIs('running-sessions.create')">
                        {{ __('Publier une annonce') }}
+                       @endif
                     </x-nav-link>
                     <x-nav-link 
                         :href="route('runner.profile', auth()->id())" :active="request()->routeIs('runner.profile')">
