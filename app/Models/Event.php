@@ -19,6 +19,7 @@ class Event extends Model
         'description',
         'location',
         'start_at',
+        'volunteers_needed',
     ];
 
     protected $casts = [
