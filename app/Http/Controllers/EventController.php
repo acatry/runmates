@@ -76,7 +76,7 @@ class EventController extends Controller
 
         $event->delete();
 
-        return redirect()->route('running-sessions.index')
+        return redirect()->route('events.index')
             ->with('success', 'L évènement a été supprimé avec succès.');
     }
 
