@@ -27,6 +27,7 @@ class User extends Authenticatable
         'age',
         'description',
         'profile_photo_path',
+        'role',
     ];
 
     /**
@@ -71,6 +72,16 @@ class User extends Authenticatable
         return $this->belongsToMany(Event::class, 'event_volunteers')
             ->withTimestamps()
             ->withPivot('volunteer_role_id');
+    }
+
+    public function isOrganizer(): bool
+    {
+        return $this->role === 'organizer';
+    }
+
+    public function isSporty(): bool
+    {
+        return $this->role === 'sporty';
     }
 
 }
