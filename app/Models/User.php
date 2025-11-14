@@ -84,4 +84,8 @@ class User extends Authenticatable
         return $this->role === 'sporty';
     }
 
+    public function eventsOrganized()
+    {
+        return $this->hasMany(Event::class, 'organizer_id');
+    }
 }

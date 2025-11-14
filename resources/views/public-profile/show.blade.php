@@ -25,21 +25,39 @@
                 <p class="text-gray-700 mb-6 text-center">{{ $user->description }}</p>
             @endif
 
-            {{-- Sessions à venir --}}
-            <h3 class="text-xl font-semibold mb-2">Prochains entraînements</h3>
+            @if($user->isSporty())
+                {{-- Sessions à venir --}}
+                <h3 class="text-xl font-semibold mb-2">Prochains entraînements</h3>
 
-            @forelse($futureSessions as $session)
-                <a href="{{ route('running-sessions.show', $session) }}"
-                   class="block p-3 border rounded mb-2 hover:bg-gray-50">
-                    <div class="font-medium">{{ $session->title }}</div>
-                    <div class="text-sm text-gray-600">
-                        {{ $session->start_at->format('d/m/Y H:i') }} —
-                        {{ $session->city ?? 'Lieu à venir' }}
-                    </div>
-                </a>
-            @empty
-                <p class="text-gray-500">Aucun entraînement prévu.</p>
-            @endforelse
+                @forelse($futureSessions as $session)
+                    <a href="{{ route('running-sessions.show', $session) }}"
+                       class="block p-3 border rounded mb-2 hover:bg-gray-50">
+                        <div class="font-medium">{{ $session->title }}</div>
+                        <div class="text-sm text-gray-600">
+                            {{ $session->start_at->format('d/m/Y H:i') }} —
+                            {{ $session->city ?? 'Lieu à venir' }}
+                        </div>
+                    </a>
+                @empty
+                    <p class="text-gray-500">Aucun entraînement prévu.</p>
+                @endforelse
+
+            @elseif($user->isOrganizer())
+                <h3 class="text-xl font-semibold mb-2">Événements créés par cet organisateur</h3>
+            
+                @forelse($futureEvents as $event)
+                    <a href="{{ route('events.show', $event) }}"
+                       class="block p-3 border rounded mb-2 hover:bg-gray-50">
+                        <div class="font-medium">{{ $event->title }}</div>
+                        <div class="text-sm text-gray-600">
+                            {{ $event->start_at->format('d/m/Y H:i') }} —
+                            {{ $event->location }}
+                        </div>
+                    </a>
+                @empty
+                    <p class="text-gray-500">Aucun événement créé.</p>
+                @endforelse
+            @endif
         </div>
     </div>
 </x-app-layout>
