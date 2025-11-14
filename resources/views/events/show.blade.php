@@ -18,10 +18,7 @@
                         {{ $event->description }}
                     </p>
                 </div>
-            </div>
-
-            <!-- Bouton d'inscription -->
-            <div class="bg-white p-6 rounded shadow flex items-center justify-between">
+                <!-- Bouton d'inscription -->
                 @php
                     $isRegistered = auth()->user()
                         ? $event->attendees()->where('users.id', auth()->id())->exists()
@@ -33,15 +30,15 @@
                     @if($isRegistered)
                         <form method="POST" action="{{ route('events.unregister', $event) }}">
                             @csrf @method('DELETE')
-                            <button class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">
-                                Se désinscrire
+                            <button class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300">
+                                Se désinscrire de la course
                             </button>
                         </form>
                     @else
                         <form method="POST" action="{{ route('events.register', $event) }}">
                             @csrf
-                            <button class="px-4 py-2 rounded bg-emerald-600 text-white hover:bg-emerald-500">
-                                S’inscrire
+                            <button class="px-3 py-1 rounded bg-emerald-600 text-white hover:bg-emerald-500">
+                                S’inscrire à la course
                             </button>
                         </form>
                     @endif
@@ -64,6 +61,29 @@
                     @endif
                 </div>
             </div>
+            
+            <!-- Pour les sportifs, on affiche les besoins en bénévoles -->
+                @if(auth()->check() && auth()->user()->isSporty() && $event->volunteers_needed)
+                    @if(($roles = $event->volunteerRoles)->isNotEmpty())
+                        <div class="bg-white p-6 rounded shadow">
+                            <h3 class="font-semibold mb-3">Besoins en bénévoles</h3>
+
+                            <ul class="list-disc pl-6 space-y-1">
+                                @foreach($roles as $role)
+                                    <li>
+                                        {{ $role->name }}
+                                        @if($role->max_slots)
+                                            <span class="text-sm text-gray-600">
+                                                (max {{ $role->max_slots }} bénévole{{ $role->max_slots > 1 ? 's' : '' }})
+                                            </span>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                @endif
+
 
             <!-- Liste des participants -->
             <div class="bg-white p-6 rounded shadow">
