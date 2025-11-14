@@ -27,20 +27,22 @@
                 @endphp
 
                 <div>
-                    @if($isRegistered)
-                        <form method="POST" action="{{ route('events.unregister', $event) }}">
-                            @csrf @method('DELETE')
-                            <button class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300">
-                                Se désinscrire de la course
-                            </button>
-                        </form>
-                    @else
-                        <form method="POST" action="{{ route('events.register', $event) }}">
-                            @csrf
-                            <button class="px-3 py-1 rounded bg-emerald-600 text-white hover:bg-emerald-500">
-                                S’inscrire à la course
-                            </button>
-                        </form>
+                    @if(auth()->user()->isSporty())
+                        @if($isRegistered)
+                            <form method="POST" action="{{ route('events.unregister', $event) }}">
+                                @csrf @method('DELETE')
+                                <button class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300">
+                                    Se désinscrire de la course
+                                </button>
+                            </form>
+                        @else
+                            <form method="POST" action="{{ route('events.register', $event) }}">
+                                @csrf
+                                <button class="px-3 py-1 rounded bg-emerald-600 text-white hover:bg-emerald-500">
+                                    S’inscrire à la course
+                                </button>
+                            </form>
+                        @endif
                     @endif
                     @if(auth()->id() === $event->organizer_id)
                         <div class="flex gap-2">
@@ -63,7 +65,7 @@
             </div>
             
             <!-- Pour les sportifs, on affiche les besoins en bénévoles -->
-                @if(auth()->check() && auth()->user()->isSporty() && $event->volunteers_needed)
+                @if(auth()->check() && auth()->user()->isSporty() || auth()->user()->isOrganizer()  && $event->volunteers_needed)
                     @if(($roles = $event->volunteerRoles)->isNotEmpty())
                         <div class="bg-white p-6 rounded shadow">
                             <h3 class="font-semibold mb-3">Besoins en bénévoles</h3>
@@ -99,27 +101,29 @@
                                             </span>
                                         @endif
                                         </div>
-                                        <div>
-                                            @if($currentRoleId === $role->id)
-                                                <form method="POST" action="{{ route('events.volunteers.delete', $event) }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="px-3 py-0 bg-gray-200 rounded text-sm">
-                                                        Se désinscrire
-                                                    </button>
-                                                </form>
-                                            @else
-                                                @unless($isFull)
-                                                    <form method="POST" action="{{ route('events.volunteers.store', $event) }}">
+                                        @if(auth()->user()->isSporty())
+                                            <div>
+                                                @if($currentRoleId === $role->id)
+                                                    <form method="POST" action="{{ route('events.volunteers.delete', $event) }}">
                                                         @csrf
-                                                        <input type="hidden" name="volunteer_role_id" value="{{ $role->id }}">
-                                                        <button class="px-3 py-0 bg-emerald-600 text-white rounded text-sm hover:bg-emerald-500">
-                                                            S’inscrire
+                                                        @method('DELETE')
+                                                        <button class="px-3 py-0 bg-gray-200 rounded text-sm">
+                                                            Se désinscrire
                                                         </button>
                                                     </form>
-                                                @endunless
-                                            @endif
-                                        </div>
+                                                @else
+                                                    @unless($isFull)
+                                                        <form method="POST" action="{{ route('events.volunteers.store', $event) }}">
+                                                            @csrf
+                                                            <input type="hidden" name="volunteer_role_id" value="{{ $role->id }}">
+                                                            <button class="px-3 py-0 bg-emerald-600 text-white rounded text-sm hover:bg-emerald-500">
+                                                                S’inscrire
+                                                            </button>
+                                                        </form>
+                                                    @endunless
+                                                @endif
+                                            </div>
+                                        @endif
                                     </li>
                                 @endforeach
                             </ul>
