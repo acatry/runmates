@@ -9,6 +9,7 @@ use App\Http\Controllers\RunningSessionController;
 use App\Http\Controllers\RunningSessionParticipationController;
 use \App\Http\Controllers\PublicProfileController;
 use \App\Http\Controllers\CommentController;
+use App\Http\Controllers\EventVolunteerController;
 
 
 
@@ -72,6 +73,11 @@ Route::middleware('auth')->group(function () {
     //COMMENTS
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
+    // BÉNÉVOLES SUR LES ÉVÈNEMENTS
+    Route::post('/events/{event}/volunteers', [EventVolunteerController::class, 'store'])
+        ->name('events.volunteers.store');
+    Route::delete('/events/{event}/volunteers', [EventVolunteerController::class, 'delete'])
+        ->name('events.volunteers.delete');
 
 });
 
