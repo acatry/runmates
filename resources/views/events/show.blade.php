@@ -67,16 +67,59 @@
                     @if(($roles = $event->volunteerRoles)->isNotEmpty())
                         <div class="bg-white p-6 rounded shadow">
                             <h3 class="font-semibold mb-3">Besoins en bénévoles</h3>
+                                @php
+                                    $currentRoleId = DB::table('event_volunteers')
+                                        ->where('event_id', $event->id)
+                                        ->where('user_id', auth()->id())
+                                        ->value('volunteer_role_id');
+                                @endphp
 
                             <ul class="list-disc pl-6 space-y-1">
                                 @foreach($roles as $role)
-                                    <li>
+                                    <li class="flex items-center justify-between">
+                                        <div>
                                         {{ $role->name }}
+                                        @php
+                                            // Nombre d'inscrits sur ce rôle
+                                            $count = DB::table('event_volunteers')
+                                                ->where('event_id', $event->id)
+                                                ->where('volunteer_role_id', $role->id)
+                                                ->count();
+
+                                            $isFull = $role->max_slots && $count >= $role->max_slots;
+                                        @endphp
                                         @if($role->max_slots)
                                             <span class="text-sm text-gray-600">
-                                                (max {{ $role->max_slots }} bénévole{{ $role->max_slots > 1 ? 's' : '' }})
+                                                ({{ $count }} / {{ $role->max_slots }} bénévoles)
                                             </span>
                                         @endif
+                                        @if($isFull)
+                                            <span class="ml-2 text-red-600 font-semibold text-sm">
+                                                COMPLET
+                                            </span>
+                                        @endif
+                                        </div>
+                                        <div>
+                                            @if($currentRoleId === $role->id)
+                                                <form method="POST" action="{{ route('events.volunteers.delete', $event) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="px-3 py-0 bg-gray-200 rounded text-sm">
+                                                        Se désinscrire
+                                                    </button>
+                                                </form>
+                                            @else
+                                                @unless($isFull)
+                                                    <form method="POST" action="{{ route('events.volunteers.store', $event) }}">
+                                                        @csrf
+                                                        <input type="hidden" name="volunteer_role_id" value="{{ $role->id }}">
+                                                        <button class="px-3 py-0 bg-emerald-600 text-white rounded text-sm hover:bg-emerald-500">
+                                                            S’inscrire
+                                                        </button>
+                                                    </form>
+                                                @endunless
+                                            @endif
+                                        </div>
                                     </li>
                                 @endforeach
                             </ul>
@@ -97,7 +140,7 @@
                 @endphp
 
                 @if($attendees->isEmpty())
-                    <p class="text-gray-500 text-sm">Aucun participant pour le moment.</p>
+                    <p class="text-gray-500 text-sm">Aucun participant à la course pour le moment.</p>
                 @else
                     <ul class="list-disc pl-6 space-y-1">
                         @foreach($attendees as $user)
@@ -136,7 +179,7 @@
             <!-- Retour -->
             <div class="flex justify-between">
                 <a href="{{ route('events.index') }}" class="px-3 py-2 bg-gray-100 rounded hover:bg-gray-200">
-                    ← Retour à la liste
+                    Retour à la liste
                 </a>
                 <a href="{{ route('events.create') }}" class="px-3 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500">
                     Créer un autre événement
