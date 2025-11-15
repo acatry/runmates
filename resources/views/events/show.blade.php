@@ -51,11 +51,11 @@
                             Modifier
                         </a>
                         <form method="POST" action="{{ route('events.delete', $event) }}"
-                              class="inline-block"
-                              onsubmit="return confirm('Supprimer cet évènement ?');">
+                            class="inline-block"
+                            onsubmit="return confirm('Supprimer cet évènement ?');">
                             @csrf
                             @method('DELETE')
-                           <button class="inline-block px-3 py-1 bg-red-600 text-white rounded hover:bg-red-300 text-sm">
+                            <button class="inline-block px-3 py-1 bg-red-600 text-white rounded hover:bg-red-300 text-sm">
                                 Supprimer
                             </button>
                         </form>
@@ -64,7 +64,8 @@
                 </div>
             </div>
             
-            <!-- Pour les sportifs, on affiche les besoins en bénévoles -->
+            <!-- Pour les sportifs, on affiche les besoins en bénévoles avec possibilité de s'inscrire -->
+            <!-- Pour les organisateurs, on on leur donne la possibilité de contacter les bénévoles par mail pour chaque rôle -->
                 @if(auth()->check() && auth()->user()->isSporty() || auth()->user()->isOrganizer()  && $event->volunteers_needed)
                     @if(($roles = $event->volunteerRoles)->isNotEmpty())
                         <div class="bg-white p-6 rounded shadow">
@@ -123,6 +124,37 @@
                                                     @endunless
                                                 @endif
                                             </div>
+                                        @endif
+
+                                        @if(auth()->user()->isOrganizer() && auth()->id() === $event->organizer_id)
+                                            @php
+                                                $eventVolunteers = DB::table('event_volunteers') 
+                                                    ->join('users', 'event_volunteers.user_id', '=', 'users.id') 
+                                                    ->where('event_volunteers.event_id', $event->id) 
+                                                    ->where('event_volunteers.volunteer_role_id', $role->id) 
+                                                    ->select('users.name', 'users.email') 
+                                                    ->get(); 
+
+                                                $volunteerEmails = $eventVolunteers->pluck('email')->toArray(); 
+                                                $sendMailTo = count($volunteerEmails) > 0 ? 'mailto:'.implode(',', $volunteerEmails) : null;
+                                            @endphp
+
+                                            @if($sendMailTo)
+                                                <div class="ml-4 text-right text-xs">
+                                                    <a href="{{ $sendMailTo }}"
+                                                       class="px-3 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-500">
+                                                        Contacter ces bénévoles
+                                                    </a>
+
+                                                    @if($eventVolunteers->count() > 0)
+                                                        <div class="mt-1 text-gray-600">
+                                                            @foreach($eventVolunteers as $ev)
+                                                                - {{ $ev->name }} ({{ $ev->email }})<br>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            @endif
                                         @endif
                                     </li>
                                 @endforeach
