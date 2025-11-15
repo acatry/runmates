@@ -142,15 +142,26 @@
                                             @if($sendMailTo)
                                                 <div class="ml-4 text-right text-xs">
                                                     <a href="{{ $sendMailTo }}"
-                                                       class="px-3 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-500">
-                                                        Contacter ces bénévoles
+                                                       class="px-3 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-500 whitespace-nowrap">
+                                                        Contacter les bénévoles {{ $role->name }}
                                                     </a>
 
                                                     @if($eventVolunteers->count() > 0)
                                                         <div class="mt-1 text-gray-600">
-                                                            @foreach($eventVolunteers as $ev)
-                                                                - {{ $ev->name }} ({{ $ev->email }})<br>
-                                                            @endforeach
+                                                            <div x-data="{ open: false }" class="mt-2">                                               
+                                                                <button 
+                                                                    @click="open = !open" 
+                                                                    class="text-blue-600 underline hover:text-blue-800"
+                                                                >
+                                                                    <span x-show="!open">Afficher les bénévoles</span>
+                                                                    <span x-show="open">Masquer les bénévoles</span>
+                                                                </button>
+                                                                <div x-show="open" class="mt-1 text-gray-600">
+                                                                    @foreach($eventVolunteers as $ev)
+                                                                        - {{ $ev->name }} ({{ $ev->email }})<br>
+                                                                    @endforeach
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     @endif
                                                 </div>
