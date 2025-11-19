@@ -50,11 +50,29 @@ class EventController extends Controller
         return redirect()->route('events.index')->with('success', 'Événement créé !');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $events = Event::orderBy('start_at')->paginate(10);
-        return view('events.index', compact('events'));
+        $search = $request->q;
+        $onlyVolunteers = $request->only_volunteers == '1';
+
+        $query = Event::orderBy('start_at');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%$search%")
+                  ->orWhere('description', 'like', "%$search%")
+                  ->orWhere('location', 'like', "%$search%");
+            });
+        }
+
+        if ($onlyVolunteers) {
+            $query->where('volunteers_needed', true);
+        }
+
+        $events = $query->paginate(10)->withQueryString();
+        return view('events.index', compact('events', 'search', 'onlyVolunteers'));
     }
+
 
     public function show(Event $event)
     {

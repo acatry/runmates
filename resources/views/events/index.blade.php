@@ -10,18 +10,18 @@
                 <input type="text" name="q" value="{{ request('q') }}"
                        class="border rounded px-3 py-2 w-full"
                        placeholder="Rechercher (titre, lieu)">
+                <label class="inline-flex items-center gap-1 text-sm">
+                    <input
+                        type="checkbox"
+                        name="only_volunteers"
+                        value="1"
+                        {{ request('only_volunteers') ? 'checked' : '' }}>
+                    <span>cherchant des bénévoles</span>
+                </label>
                 <button class="px-4 py-2 bg-indigo-600 text-white rounded">
                     Rechercher
                 </button>
             </form>
-
-            {{-- Bouton pour créer un évènement --}}
-            <div class="mb-4 text-right">
-                <a href="{{ route('events.create') }}"
-                   class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-500">
-                    + Publier un événement
-                </a>
-            </div>
 
             {{-- Si aucun événement --}}
             @if($events->isEmpty())
@@ -88,7 +88,7 @@
                                 @endif
                             </div>
 
-                                                            @php
+                                @php
                                     $attendeeCount = $event->attendees()->count();
                                 @endphp
                                 <span class="text-xs text-gray-500">
