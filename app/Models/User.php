@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\RunningSession;
 use App\Models\Event;
+use App\Models\Notification;
 
 class User extends Authenticatable
 {
@@ -87,5 +88,10 @@ class User extends Authenticatable
     public function eventsOrganized()
     {
         return $this->hasMany(Event::class, 'organizer_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 }
