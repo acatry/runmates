@@ -82,7 +82,8 @@
 
                     <x-slot name="content">
                         @php
-                            $notifications = auth()->user()?->notifications()->get() ?? collect();
+                            $notifications = auth()->user()?->notifications()->limit(5)->get() ?? collect();
+                            $totalCount = auth()->user()?->notifications()->count() ?? 0;
                         @endphp
 
                         @if ($notifications->isEmpty())
@@ -93,8 +94,18 @@
                             @foreach ($notifications as $notif)
                                 <div class="px-4 py-2 text-sm text-gray-700 border-b">
                                     {{ $notif->message ?? $notif->content ?? 'Notification' }}
+                                    <div class="text-xs text-gray-400">
+                                        {{ $notif->created_at->format('d/m/Y H:i') }}
+                                    </div>
                                 </div>
                             @endforeach
+                        @endif
+
+                        @if($totalCount > 5)
+                            <a href="{{ route('notifications.index') }}"
+                               class="block text-center text-blue-600 hover:underline px-4 py-2 text-sm">
+                                (+5) Voir toutes les notifications
+                            </a>
                         @endif
                     </x-slot>
                 </x-dropdown>

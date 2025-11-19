@@ -60,7 +60,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/running-sessions/{runningSession}', [RunningSessionController::class, 'delete'])
     ->name('running-sessions.delete');
 
-
+    //VUE NOTIFICATIONS
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
 
 
     //PROFILE
