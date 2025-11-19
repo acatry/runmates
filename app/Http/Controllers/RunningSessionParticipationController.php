@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\RunningSession;
 use App\Models\RunningSessionParticipation;
+use App\Models\Notification;
 
 class RunningSessionParticipationController extends Controller
 {
@@ -20,6 +21,14 @@ class RunningSessionParticipationController extends Controller
             $participation->running_session_id = $runningSession->id;
             $participation->status = 'confirmed';
             $participation->save();
+
+            if ($runningSession->organizer_id !== $request->user()->id) {
+                Notification::create([
+                    'user_id' => $runningSession->organizer_id,
+                    'type' => 'join_running_session',
+                    'message' => $request->user()->name.' a rejoint votre running session "'.$runningSession->title.'".',
+                ]);
+            }
 
             return redirect()->back()->with('success', 'Vous avez rejoint cette session d’entraînement.');
         } else {
