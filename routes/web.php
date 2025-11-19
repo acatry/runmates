@@ -10,6 +10,7 @@ use App\Http\Controllers\RunningSessionParticipationController;
 use \App\Http\Controllers\PublicProfileController;
 use \App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventVolunteerController;
+use App\Http\Controllers\NotificationController;
 
 
 
