@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('sender_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('type')->nullable();      
             $table->text('message');
+            $table->unsignedBigInteger('related_id')->nullable();
             $table->timestamps();
         });
     }

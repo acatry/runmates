@@ -25,8 +25,10 @@ class RunningSessionParticipationController extends Controller
             if ($runningSession->organizer_id !== $request->user()->id) {
                 Notification::create([
                     'user_id' => $runningSession->organizer_id,
+                    'sender_id'  => $request->user()->id,
                     'type' => 'join_running_session',
                     'message' => $request->user()->name.' a rejoint votre running session "'.$runningSession->title.'".',
+                    'related_id' => $runningSession->id,
                 ]);
             }
 
@@ -44,6 +46,11 @@ class RunningSessionParticipationController extends Controller
 
         if ($participation) {
             $participation->delete();
+            Notification::where('user_id', $runningSession->organizer_id)
+                ->where('sender_id', $request->user()->id)
+                ->where('type', 'join_running_session')
+                ->where('related_id', $runningSession->id)
+                ->delete();
             return redirect()->back()->with('success', 'Vous vous êtes désinscrit de cette session.');
         } else {
             return redirect()->back()->with('success', 'Vous n’étiez pas inscrit à cette session.');
