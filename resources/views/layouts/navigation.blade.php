@@ -144,11 +144,7 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
+        
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
@@ -157,11 +153,32 @@
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
 
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+            <div class="pt-2 pb-3 space-y-1">     
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                Accueil
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('events.index')" :active="request()->routeIs('events.index')">
+                Événements
+            </x-responsive-nav-link>
+            @if (auth()->user()->isOrganizer())
+                <x-responsive-nav-link :href="route('events.create')" :active="request()->routeIs('events.create')">
+                    Créer un évènement
                 </x-responsive-nav-link>
-
+            @endif
+            <x-responsive-nav-link :href="route('running-sessions.index')" :active="request()->routeIs('running-sessions.index')">
+                Sessions d'entraînement
+            </x-responsive-nav-link>
+            @if (auth()->user()->isSporty())
+                <x-responsive-nav-link :href="route('running-sessions.create')" :active="request()->routeIs('running-sessions.create')">
+                    Créer une session
+                </x-responsive-nav-link>
+            @endif
+            <x-responsive-nav-link :href="route('runner.profile', auth()->id())" :active="request()->routeIs('runner.profile')">
+                Mon profil
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('notifications.index')" :active="request()->routeIs('notifications.index')">
+                Notifications
+            </x-responsive-nav-link>
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -169,7 +186,7 @@
                     <x-responsive-nav-link :href="route('logout')"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                        Se déconnecter
                     </x-responsive-nav-link>
                 </form>
             </div>
