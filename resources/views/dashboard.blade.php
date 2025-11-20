@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl">RunMates</h2>
+        <h2 class="font-semibold text-xl">Fil d'actualité</h2>
     </x-slot>
 
     <div class="py-6 max-w-4xl mx-auto">

@@ -5,19 +5,30 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-800 border border-gray-600">
+                            <span class="text-sm font-bold text-gray-200 tracking-tight">
+                                RM
+                            </span>
+                        </div>
+                        <span class="hidden text-sm font-semibold text-gray-800 sm:inline">
+                            Runmates
+                        </span>
                     </a>
+
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex sm:items-center">
+                <div class="hidden sm:-my-px sm:ms-10 sm:flex sm:items-center gap-2 nav-main">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Accueil') }}
                     </x-nav-link>
+                    @php
+                        $eventsActive = request()->routeIs('events.*');
+                    @endphp
                     <x-dropdown align="left">
                         <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">
+                            <button class="{{ $eventsActive ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100' }} inline-flex items-center px-3 py-2 text-sm rounded-full">
                                 Événements
                                 <x-icon-chevron-down class="ms-1 w-4 h-4" />
                             </button>
@@ -37,8 +48,11 @@
                     </x-dropdown>
 
                     <x-dropdown align="left">
+                        @php
+                            $sessionsActive = request()->routeIs('running-sessions.*');
+                        @endphp
                         <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">
+                            <button class="{{ $sessionsActive ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100' }} inline-flex items-center px-3 py-2 text-sm rounded-full">
                                 Sessions d’entraînement
                                 <x-icon-chevron-down class="ms-1 w-4 h-4" />
                             </button>
@@ -68,10 +82,22 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">
-                                 <div>{{ Auth::user()->name }}</div>
-                                <x-icon-chevron-down class="ms-1 w-4 h-4" />
+                        <button class="inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-2 text-sm text-gray-700 hover:bg-gray-200">
+                            <div class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden text-xs font-semibold text-gray-700">
+                                @php
+                                    $authUser = Auth::user();
+                                @endphp
+                                @if($authUser->profile_photo_path)
+                                    <img src="{{ asset('storage/' . $authUser->profile_photo_path) }}"
+                                         class="h-full w-full object-cover">
+                                @else
+                                    {{ strtoupper(substr($authUser->name, 0, 2)) }}
+                                @endif
+                            </div>
+                        
+                            <span class="hidden sm:inline">{{ $authUser->name }}</span>
                         </button>
+
                     </x-slot>
 
                     <x-slot name="content">
@@ -94,8 +120,8 @@
 
                 <x-dropdown align="right" width="w-80">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>Notifications</div>
+                        <button class="relative inline-flex items-center justify-center rounded-full bg-gray-100 px-3 py-2 text-gray-700 text-sm hover:bg-gray-200">
+                            <div>🔔 Notifications</div>
                         </button>
                     </x-slot>
 
@@ -144,7 +170,7 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        
+
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
