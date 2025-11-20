@@ -14,29 +14,37 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+
+    <body class="bg-primary font-sans antialiased bg-gray-100 text-gray-900">
+        <div class="min-h-screen flex flex-col">
             @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+            <main class="flex-1">
+                <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-            <!-- Page Content -->
-            <main>
-                @if (session('success'))
-                  <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 mt-4">
-                    <div class="p-3 rounded bg-emerald-100 text-emerald-800">
-                      {{ session('success') }}
+                    @isset($header)
+                        <header class="mb-4">
+                            <h1 class="text-2xl sm:text-3xl font-semibold text-gray-800">
+                                {{ $header }}
+                            </h1>
+                        </header>
+                    @endisset
+
+                    @if (session('success'))
+                        <div class="mb-4">
+                            <div class="rounded-xl border border-emerald-300 bg-emerald-100 px-4 py-3 text-sm text-emerald-800">
+                                {{ session('success') }}
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="bg-white border border-gray-200 rounded-2xl shadow-xl shadow-gray-300/30">
+                        <div class="p-4 sm:p-6 lg:p-8">
+                            {{ $slot }}
+                        </div>
                     </div>
-                  </div>
-                @endif
-                {{ $slot }}
+
+                </div>
             </main>
         </div>
     </body>
