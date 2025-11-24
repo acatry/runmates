@@ -135,6 +135,9 @@
                 <input type="hidden" name="commentable_type" value="App\Models\RunningSession">
 
                 <textarea name="content" class="w-full border rounded p-2" rows="2" placeholder="Ecrivez votre commentaire"></textarea>
+                @error('content')
+                    <p class="text-red-600 text-sm mt-1"> {{ $message }} </p>
+                @enderror
 
                 <button class="mt-2 px-3 py-1 bg-blue-600 text-white rounded">Publier</button>
             </form>

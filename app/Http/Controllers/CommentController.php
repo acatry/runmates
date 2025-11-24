@@ -13,6 +13,9 @@ class CommentController extends Controller
             'commentable_type' => 'required',
             'commentable_id' => 'required',
             'content' => 'required|max:500',
+        ], ['content.required' => 'Vous ne pouvez pas envoyer un commentaire vide.',
+            'content.max' => 'Le commentaire ne peut pas dépasser 500 caractéres.',
+
         ]);
 
         Comment::create([
