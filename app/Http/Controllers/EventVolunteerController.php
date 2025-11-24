@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\VolunteerRole;
 use Illuminate\Support\Facades\DB;
 
 class EventVolunteerController extends Controller
@@ -18,6 +19,17 @@ class EventVolunteerController extends Controller
 
         if (! $user->isSporty()) {
             abort(403);
+        }
+
+        $count = DB::table('event_volunteers')
+            ->where('event_id', $event->id)
+            ->where('volunteer_role_id', $request->volunteer_role_id)
+            ->count();
+
+        $max = VolunteerRole::find($request->volunteer_role_id)->max_slots;
+
+        if ($max && $count >= $max) {
+            return back()->with('error', 'Ce poste est complet.');
         }
 
         DB::table('event_volunteers')->updateOrInsert(
