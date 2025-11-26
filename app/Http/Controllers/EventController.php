@@ -105,7 +105,7 @@ class EventController extends Controller
         $keyword = $request->input('q');
         $onlyVolunteers = $request->only_volunteers == '1';
 
-        $query = Event::orderBy('start_at');
+        $query = Event::where('start_at', '>', now());
 
         if ($keyword) {
             $query->where(function ($subQuery) use ($keyword) {

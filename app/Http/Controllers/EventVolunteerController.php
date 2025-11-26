@@ -11,6 +11,14 @@ class EventVolunteerController extends Controller
 {
     public function store(Request $request, Event $event)
     {
+        $alreadyVolunteer = \DB::table('event_volunteers')
+            ->where('event_id', $event->id)
+            ->where('user_id', auth()->id())
+            ->exists();
+
+        if ($alreadyVolunteer){
+            return back()->with('error', 'Vous ne pouvez pas vous inscrire deux fois en tant que bénévole.');
+        }
         $request->validate([
             'volunteer_role_id' => ['required', 'integer'],
         ]);

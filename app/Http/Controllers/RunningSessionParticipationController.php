@@ -11,6 +11,10 @@ class RunningSessionParticipationController extends Controller
 {
     public function store(Request $request, RunningSession $runningSession)
     {
+        if ($runningSession->start_at-> now()){
+            return back->with('error','Impossible de sʼinscrire à une session dʼentraînement déjà passée.');
+        }
+
         $alreadyParticipating = RunningSessionParticipation::where('user_id', $request->user()->id)
             ->where('running_session_id', $runningSession->id)
             ->exists();
