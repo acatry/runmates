@@ -21,7 +21,6 @@ class PublicProfileController extends Controller
 
         if ($user->isOrganizer()) {
             $futureEvents = $user->eventsOrganized()
-                ->where('start_at', '>', now())
                 ->orderBy('start_at')
                 ->get();
         }

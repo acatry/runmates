@@ -47,6 +47,7 @@
                         </x-slot>
                     </x-dropdown>
 
+                    @if (auth()->user()->isSporty())
                     <x-dropdown align="left">
                         @php
                             $sessionsActive = request()->routeIs('running-sessions.*');
@@ -57,19 +58,19 @@
                                 <x-icon-chevron-down class="ms-1 w-4 h-4" />
                             </button>
                         </x-slot>
-
+                        
                         <x-slot name="content">
                             <x-dropdown-link href="{{ route('running-sessions.index') }}">
                                 Consulter
                             </x-dropdown-link>
 
-                            @if (auth()->user()->isSporty())
+                            
                                 <x-dropdown-link href="{{ route('running-sessions.create') }}">
                                     Créer
                                 </x-dropdown-link>
-                            @endif
                         </x-slot>
                     </x-dropdown>
+                    @endif
 
                     <x-nav-link 
                         :href="route('runner.profile', auth()->id())" :active="request()->routeIs('runner.profile')">

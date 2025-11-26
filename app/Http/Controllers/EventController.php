@@ -25,6 +25,11 @@ class EventController extends Controller
             'max.*'   => 'nullable|integer|min:1',
         ]);
 
+        if ($request->start_at < date('Y-m-d')) {
+            return back()->withErrors(['start_at' => "La date ne peut pas être antérieure à celle d'aujourd'hui."]);
+        }
+
+
         $validated['organizer_id'] = auth()->id();
 
         $validated['volunteers_needed'] = (int)($request->input('volunteers_needed', 0));
@@ -49,30 +54,6 @@ class EventController extends Controller
 
         return redirect()->route('events.index')->with('success', 'Événement créé !');
     }
-
-    public function index(Request $request)
-    {
-        $search = $request->q;
-        $onlyVolunteers = $request->only_volunteers == '1';
-
-        $query = Event::orderBy('start_at');
-
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%$search%")
-                  ->orWhere('description', 'like', "%$search%")
-                  ->orWhere('location', 'like', "%$search%");
-            });
-        }
-
-        if ($onlyVolunteers) {
-            $query->where('volunteers_needed', true);
-        }
-
-        $events = $query->paginate(10)->withQueryString();
-        return view('events.index', compact('events', 'search', 'onlyVolunteers'));
-    }
-
 
     public function show(Event $event)
     {
@@ -118,6 +99,28 @@ class EventController extends Controller
 
         return redirect()->route('events.index')
             ->with('success', 'L évènement a été supprimé avec succès.');
+    }
+    public function index(Request $request)
+    {
+        $keyword = $request->input('q');
+        $onlyVolunteers = $request->only_volunteers == '1';
+
+        $query = Event::orderBy('start_at');
+
+        if ($keyword) {
+            $query->where(function ($subQuery) use ($keyword) {
+                $subQuery->where('title', 'like', "%$keyword%")
+                  ->orWhere('description', 'like', "%$keyword%")
+                  ->orWhere('location', 'like', "%$keyword%");
+            });
+        }
+
+        if ($onlyVolunteers) {
+            $query->where('volunteers_needed', true);
+        }
+
+        $events = $query->paginate(10)->withQueryString();
+        return view('events.index', compact('events', 'keyword', 'onlyVolunteers'));
     }
 
 }
