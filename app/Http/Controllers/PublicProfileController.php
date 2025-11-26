@@ -10,11 +10,15 @@ class PublicProfileController extends Controller
     public function show(User $user)
     {
         $futureSessions = [];
+        $sessionsOrganized = [];
         $futureEvents = [];
 
         if ($user->isSporty()) {
             $futureSessions = $user->runningSessionsJoined()
                 ->where('start_at', '>', now())
+                ->orderBy('start_at')
+                ->get();
+            $sessionsOrganized = $user->runningSessionsOrganized()
                 ->orderBy('start_at')
                 ->get();
         }
@@ -25,6 +29,6 @@ class PublicProfileController extends Controller
                 ->get();
         }
 
-        return view('public-profile.show', compact('user', 'futureSessions', 'futureEvents'));
+        return view('public-profile.show', compact('user', 'futureSessions', 'sessionsOrganized', 'futureEvents'));
     }
 }

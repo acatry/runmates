@@ -42,6 +42,21 @@
                     <p class="text-gray-500">Aucun entraînement prévu.</p>
                 @endforelse
 
+                <h3 class="text-xl font-semibold mb-2">Entraînements crées</h3>
+                
+                @forelse($sessionsOrganized as $organized)
+                    <a href="{{ route('running-sessions.show', $organized) }}"
+                       class="block p-3 border rounded mb-2 hover:bg-gray-50">
+                        <div class="font-medium">{{ $organized->title }}</div>
+                        <div class="text-sm text-gray-600">
+                            {{ $organized->start_at->format('d/m/Y H:i') }} —
+                            {{ $organized->city ?? 'Lieu à venir' }}
+                        </div>
+                    </a>
+                @empty
+                    <p class="text-gray-500">Cet utilisateur n'a créé aucune session d'entraînement.</p>
+                @endforelse
+
             @elseif($user->isOrganizer())
                 <h3 class="text-xl font-semibold mb-2">Événements créés par cet organisateur</h3>
             
