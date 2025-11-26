@@ -40,5 +40,20 @@ class JoinRunningSessionTest extends TestCase
 
         $this->assertDatabaseCount('running_session_participations', 1);
     }
+    
+    public function test_cannot_join_past_running_session()
+    {
+        $user = User::factory()->create(['role' => 'sporty']);
+        $session = RunningSession::factory()->create(['start_at' => now()->subDays(2),]);
+
+        $response = $this->actingAs($user)->post("/running-sessions/{$session->id}/join");
+
+        $response->assertSessionHas('error', 'Impossible de s’inscrire à une session d’entraînement déjà passée.');
+
+        $this->assertDatabaseMissing('running_session_participations', [
+            'user_id' => $user->id,
+            'running_session_id' => $session->id,
+        ]);
+    }
 }
 
