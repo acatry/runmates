@@ -12,7 +12,7 @@ class RunningSession extends Model
     protected $fillable = [
         'organizer_id','title','description','location','city','zipcode','start_at',
         'distance_km_min','distance_km_max','pace_min_per_km_min','pace_min_per_km_max',
-        'duration_min','duration_max','max_participants','visibility','status', 
+        'duration_min','duration_max','max_participants','visibility', 
         'latitude','longitude',
     ];
 
@@ -30,8 +30,7 @@ class RunningSession extends Model
 
     public function attendees(){
         return $this->belongsToMany(User::class, 'running_session_participations')
-            ->withTimestamps()
-            ->withPivot('status');
+            ->withTimestamps();
     }
     
     public function comments()

@@ -19,7 +19,6 @@ class RunningSessionParticipationController extends Controller
             $participation = new RunningSessionParticipation();
             $participation->user_id = $request->user()->id;
             $participation->running_session_id = $runningSession->id;
-            $participation->status = 'confirmed';
             $participation->save();
 
             if ($runningSession->organizer_id !== $request->user()->id) {

@@ -64,8 +64,7 @@ class User extends Authenticatable
     }
     public function runningSessionsJoined(){
         return $this->belongsToMany(RunningSession::class, 'running_session_participations')
-            ->withTimestamps()
-            ->withPivot('status');
+            ->withTimestamps();
     }
 
     public function volunteeredEvents()

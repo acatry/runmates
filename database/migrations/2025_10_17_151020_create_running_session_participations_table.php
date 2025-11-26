@@ -13,8 +13,6 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('running_session_id')->constrained('running_sessions')->cascadeOnDelete();
 
-            $table->enum('status', ['confirmed','cancelled'])->default('confirmed');
-
             $table->timestamps();
 
             $table->unique(['user_id','running_session_id']);
