@@ -110,7 +110,8 @@ class RunningSessionController extends Controller
         $city = $request->input('city');       
         $zipcode = $request->input('zipcode'); 
 
-        $query = RunningSession::orderBy('start_at', 'asc');
+        $query = RunningSession::where('start_at', '>', now())
+                                ->orderBy('start_at');
 
         if (!empty($keyword)) {
             $query->where(function($subQuery) use ($keyword) {
