@@ -50,15 +50,7 @@
                            class="inline-block px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-300 text-sm">
                             Modifier
                         </a>
-                        <form method="POST" action="{{ route('events.delete', $event) }}"
-                            class="inline-block"
-                            onsubmit="return confirm('Supprimer cet évènement ?');">
-                            @csrf
-                            @method('DELETE')
-                            <button class="inline-block px-3 py-1 bg-red-600 text-white rounded hover:bg-red-300 text-sm">
-                                Supprimer
-                            </button>
-                        </form>
+                        @livewire('delete-button', ['model' => $event,'redirect' => route('events.index')], key('delete-event-' . $event->id))
                     </div>
                     @endif
                 </div>

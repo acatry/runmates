@@ -83,16 +83,7 @@
                             Modifier
                         </a>
 
-                        <form method="POST" action="{{ route('running-sessions.delete', $session) }}"
-                              class="inline-block"
-                              onsubmit="return confirm('Supprimer cette session ?');">
-                            @csrf
-                            @method('DELETE')
-
-                           <button class="inline-block px-3 py-1 bg-red-600 text-white rounded hover:bg-red-300 text-sm">
-                                Supprimer
-                            </button>
-                        </form>
+                        @livewire('delete-button', ['model' => $session,'redirect' => route('running-sessions.index')], key('delete-session-' . $session->id))
                     @endif
                 </div>
             </div>
