@@ -27,6 +27,9 @@ Créez maintenant la base de donnée runmates dans phpMyAdmin.
 Vous pouvez y avoir accès en lançant la commande:
 php artisan migrate --seed 
 
+5. Génerer la clé d'application
+php artisan key:generate
+
 5. Démarrage
 php artisan serve
 
