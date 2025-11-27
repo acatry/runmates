@@ -37,7 +37,6 @@ class Event extends Model
     }
 
     public function attendees(){
-        // Liste des utilisateurs inscrits
         return $this->belongsToMany(User::class, 'event_registrations')
             ->withTimestamps();
     }

@@ -10,8 +10,8 @@ class EventRegistrationController extends Controller
 {
     public function store(Request $request, Event $event)
     {
-        if ($event->start_at-> now()){
-            return back->with('error','Impossible de sʼinscrire à un évènement déjà passé.');
+        if ($event->start_at-> lt(now())){
+            return back()->with('error','Impossible de sʼinscrire à un évènement déjà passé.');
         }
         // (Plus tard: vérif deadline/capacité)
         EventRegistration::firstOrCreate([
